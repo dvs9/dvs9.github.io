@@ -1,0 +1,153 @@
+<html>
+    <head>
+        <title>Building Inventory Dataset Visualizations - Assignment 03</title>
+        
+        <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+        
+    </head>
+    <body>
+        <div id="myviz"></div>
+        
+        <script type="text/javascript">
+              var Myspec =
+                  {
+                    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+                    "data": {"url": "https://raw.githubusercontent.com/dvs9/dvs9.github.io/master/building_inventory.csv"},
+                    "vconcat": [
+                    {
+                      "hconcat": [
+                      {
+                        "width": 250,
+                        "height": 250,
+                        "title": "Relation between Year Acquired and Year Constructed",
+                        "transform": [{
+                          "filter": {"field": "Year Constructed", "range": [1750, 2021]}
+                        },
+                        {"filter": {"field": "Year Acquired", "range": [1750, 2021]}}
+                        ],
+                        "mark": "point",
+                        "encoding": {
+                          "x": {
+                            "field": "Year Constructed",
+                            "type": "quantitative",
+                            "scale": {"domain": [1750,2021]}
+                          },
+                          "y": {
+                            "field": "Year Acquired",
+                            "type": "quantitative",
+                            "scale": {"domain": [1750, 2021]}
+                          }
+                        }
+                      },
+                      {
+                        "width": 250,
+                        "height": 250,
+                        "title": "Total Square Footage as a function of Year",
+                        "transform": [{
+                          "filter": {"field": "Year Acquired", "range": [1850, 2021]}
+                        }
+                        ],
+                        "params": [{
+                        "name": "grid",
+                        "select": "interval",
+                        "bind": "scales"
+                        }],
+                        "mark": "line",
+                        "encoding": {
+                          "x": {
+                            "field": "Year Acquired",
+                            "type": "quantitative",
+                            "scale": {"domain": [1850, 2021]}
+
+                          },
+                          "y": {
+                            "field": "Square Footage",
+                            "aggregate": "sum",
+                            "type": "quantitative",
+                            "title": "Total Square Footage"
+                          },
+                          "color": {
+                            "field": "Agency Name",
+                            "type": "nominal",
+                            "scale": {
+                              "domain": ["Department of Corrections", "University of Illinois"]
+                            }
+                          }
+                        }
+                      }
+                      ]
+                    },
+                    {
+                      "hconcat": [
+                      {
+                        "title": "Average Sqaure Footage as function of Congressional District",
+                        "width": 250,
+                        "height": 250,
+                        "mark": "bar",
+                        "encoding": {
+                          "x": {
+                            "field": "Congress Dist",
+                            "type": "quantitative"
+                          },
+                          "y": {
+                            "field": "Square Footage",
+                            "aggregate": "average",
+                            "scale": {"type": "log"},
+                            "title": "Average Sqaure Footage"
+                          },
+                          "tooltip": [
+                          {
+                            "field": "Congress Dist",
+                            "type": "quantitative",
+                            "title": "Congressional District"
+                          },
+                          {
+                            "field": "Square Footage",
+                            "aggregate": "average",
+                            "type": "quantitative",
+                            "title": "Average Square Footage"
+                          }
+                        ]
+                        }
+                      },
+                      {
+                        "width": 250,
+                        "height": 250,
+                        "title": "Total Sqaure Footage as function of Confressional District",
+                        "mark": {"type": "bar", "tooltip": true},
+                        "encoding": {
+                          "x": {
+                            "field": "Congress Dist",
+                            "type": "quantitative"
+                          },
+                          "y": {
+                            "field": "Square Footage",
+                            "aggregate": "sum",
+                            "scale": {"type": "log"},
+                            "title": "Total Squre Footage"
+                          },
+                          "tooltip": [
+                          {
+                            "field": "Congress Dist",
+                            "type": "quantitative",
+                            "title": "Congressional District"
+                          },
+                          {
+                            "field": "Square Footage",
+                            "aggregate": "sum",
+                            "type": "quantitative",
+                            "title": "Total Square Footage"
+                          }
+                        ]
+                        }
+                      }
+                      ]
+                    }
+                    ]
+                };
+            vegaEmbed('#myviz', Myspec);
+        </script>
+    </body>
+</html>
